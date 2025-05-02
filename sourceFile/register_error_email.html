@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册错误 - 邮箱已存在</title> <!-- Changed Title -->
+    <!-- Google Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* --- Same CSS Styles as the Login/Register Page --- */
+        :root {
+            --primary-color: #6a5af9;
+            --primary-hover: #5444d4;
+            --background-gradient-start: #e0eafc;
+            --background-gradient-end: #f0f4f9;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+            --input-bg: #fdfdfd;
+            --white: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --error-color: #dc3545; /* Added error color */
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'SimSun', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        h2 {
+            margin-bottom: 15px; /* Adjusted margin */
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* Style for the error message paragraph */
+        .error-description {
+            color: var(--error-color);
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .options {
+            margin-top: 25px;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .options a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 8px; /* Slightly increased margin */
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .options a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        /* --- End of Shared CSS --- */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2><i class="fas fa-exclamation-triangle" style="color: var(--error-color); margin-right: 8px;"></i>注册失败</h2> <!-- Error Heading -->
+
+        <!-- Error Message Specific to Email -->
+        <p class="error-description">
+            您输入的邮箱地址已经被注册。 <br>
+            请尝试使用其他邮箱地址，或直接登录。
+        </p>
+
+        <!-- Options for Next Steps -->
+        <div class="options">
+             <a href="register.html">返回注册页面</a> <!-- Link back to registration -->
+             <span> | </span>
+             <a href="login.html">前往登录页面</a> <!-- Link to login -->
+             <!-- Make sure 'register.html' and 'login.html' are the correct filenames -->
+        </div>
+
+    </div>
+
+</body>
+</html>

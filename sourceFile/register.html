@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN"> <!-- Changed language to Chinese -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title> <!-- Changed Title -->
+    <!-- Google Font: Poppins (Keeping for potential compatibility) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* --- Same CSS Styles as the Login Page --- */
+        :root {
+            --primary-color: #6a5af9;
+            --primary-hover: #5444d4;
+            --background-gradient-start: #e0eafc;
+            --background-gradient-end: #f0f4f9;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+            --input-bg: #fdfdfd;
+            --white: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            /* Added common Chinese fonts first */
+            font-family: 'Microsoft YaHei', 'SimSun', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px 12px 40px; /* Padding-left for icon */
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: var(--input-bg);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 70%;
+            transform: translateY(-60%);
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(106, 90, 249, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.05em;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+         .button:active {
+             transform: translateY(0px);
+        }
+
+        .options {
+            margin-top: 25px;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .options a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 5px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .options a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        /* --- End of Shared CSS --- */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>创建您的账户</h2> <!-- Changed Heading -->
+
+        <!-- Registration Form -->
+        <form action="/register-processing-url" method="post"> <!-- Action URL kept same -->
+            <!-- Replace "/register-processing-url" with your actual backend endpoint -->
+
+            <div class="form-group">
+                <label for="username">用户名</label> <!-- Changed label -->
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" name="username" required placeholder="请输入用户名"> <!-- Changed placeholder -->
+            </div>
+
+            <div class="form-group">
+                <label for="email">邮箱地址</label> <!-- Changed label -->
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" name="email" required placeholder="请输入您的邮箱"> <!-- Changed placeholder -->
+            </div>
+
+            <div class="form-group">
+                <label for="password">密码</label> <!-- Changed label -->
+                 <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" required placeholder="请输入密码"> <!-- Changed placeholder -->
+            </div>
+
+             <div class="form-group">
+                <label for="confirm-password">确认密码</label> <!-- Changed label -->
+                 <i class="fas fa-lock"></i>
+                <input type="password" id="confirm-password" name="confirm_password" required placeholder="请再次输入密码"> <!-- Changed placeholder -->
+                 <!-- Note: The 'name' attribute might need to match your backend requirements -->
+            </div>
+
+
+            <button type="submit" class="button">注册</button> <!-- Changed Button Text -->
+
+        </form>
+
+        <!-- Options for Login / Register -->
+        <div class="options">
+             <span>已经有账户了？</span> <a href="login.html">立即登录</a> <!-- Changed Text & Link Text -->
+             <!-- Make sure 'login.html' is the correct name of your login file -->
+        </div>
+
+    </div>
+
+     <!-- Optional: Basic JavaScript for password confirmation check (If needed, add script here) -->
+     <!-- Example:
+     <script>
+        const form = document.querySelector('form');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm-password');
+
+        form.addEventListener('submit', function(event) {
+            if (password.value !== confirmPassword.value) {
+                alert('两次输入的密码不一致，请检查！'); // Alert in Chinese
+                event.preventDefault(); // Stop submission
+                confirmPassword.style.borderColor = 'red';
+                password.style.borderColor = 'red';
+                confirmPassword.focus();
+            } else {
+                 confirmPassword.style.borderColor = '';
+                 password.style.borderColor = '';
+            }
+        });
+        // Add input event listeners to reset border color as in previous example if desired
+    </script>
+     -->
+
+</body>
+</html>

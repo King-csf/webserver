@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精美视频播放器</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入 Font Awesome 图标库 (请确保网络可用或本地引入) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <h1>我的精美视频播放器</h1>
+
+    <div class="video-player-container" id="video-container">
+        <!-- 视频元素 -->
+        <video class="video-player" id="videoPlayer" preload="metadata">
+            <!-- !!! 重要：替换为你自己的视频文件路径 !!! -->
+            <source src="video.mp4" type="video/mp4">
+            <!-- 可以添加其他格式的视频源作为备选 -->
+            <!-- <source src="your_video.webm" type="video/webm"> -->
+            您的浏览器不支持 HTML5 视频。
+        </video>
+
+        <!-- 控制条 -->
+        <div class="controls-container" id="controls-container">
+            <!-- 播放/暂停按钮 -->
+            <button class="control-button" id="play-pause-btn" aria-label="播放/暂停">
+                <i class="fas fa-play"></i>
+            </button>
+
+            <!-- 进度条 -->
+            <input type="range" id="progress-bar" class="progress-bar" value="0" min="0" step="0.1">
+
+            <!-- 时间显示 -->
+            <span class="time-display" id="current-time">00:00</span>
+            <span class="time-separator">/</span>
+            <span class="time-display" id="duration">00:00</span>
+
+            <!-- 音量控制 -->
+            <div class="volume-control">
+                <button class="control-button" id="volume-btn" aria-label="静音/取消静音">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="1">
+            </div>
+
+            <!-- 全屏按钮 -->
+            <button class="control-button" id="fullscreen-btn" aria-label="全屏/退出全屏">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

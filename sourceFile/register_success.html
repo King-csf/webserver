@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册成功</title> <!-- Changed Title -->
+    <!-- Google Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* --- Same CSS Styles as the Login/Register Page --- */
+        :root {
+            --primary-color: #6a5af9;
+            --primary-hover: #5444d4;
+            --background-gradient-start: #e0eafc;
+            --background-gradient-end: #f0f4f9;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+            --input-bg: #fdfdfd;
+            --white: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #28a745; /* Added success color (green) */
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'SimSun', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        h2 {
+            margin-bottom: 15px; /* Adjusted margin */
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* Style for the success message paragraph */
+        .success-description {
+            color: var(--text-light); /* Using lighter text for description */
+            margin-bottom: 30px; /* More space before button */
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        /* Reusing button style for the link */
+        .button-link {
+            display: inline-block; /* Needed for padding and width on an <a> */
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: auto; /* Auto width or specific width */
+            min-width: 150px; /* Ensure minimum size */
+            font-size: 1.05em;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none; /* Remove underline from link */
+        }
+
+        .button-link:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            color: white; /* Keep text color white on hover */
+        }
+
+         .button-link:active {
+             transform: translateY(0px);
+        }
+
+        /* --- End of Shared CSS --- */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2><i class="fas fa-check-circle" style="color: var(--success-color); margin-right: 8px;"></i>注册成功！</h2> <!-- Success Heading -->
+
+        <!-- Success Message -->
+        <p class="success-description">
+            恭喜您，您的账户已成功创建。<br>
+            现在您可以前往登录页面进行登录了。
+        </p>
+
+        <!-- Link/Button to Login Page -->
+        <a href="login.html" class="button-link">前往登录</a>
+        <!-- Make sure 'login.html' is the correct filename -->
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+body {
+    font-family: sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.video-player-container {
+    position: relative; /* 重要：为控制条绝对定位提供基准 */
+    width: 80%; /* 可根据需要调整宽度 */
+    max-width: 800px; /* 设置最大宽度 */
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden; /* 隐藏超出部分，例如圆角外的控制条 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 全屏时的样式 */
+.video-player-container:fullscreen {
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+.video-player-container:-webkit-full-screen { /* Safari/Chrome */
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+.video-player-container:-moz-full-screen { /* Firefox */
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+
+
+.video-player {
+    display: block;
+    width: 100%;
+    /* !!! 尝试将 height 设置为 100% !!! */
+    height: 100%;
+    /* !!! 确保 object-fit 存在 !!! */
+    object-fit: contain;
+    background-color: #000; /* 确保有背景色填充黑边 */
+    /* border-radius 在全屏时通常会被覆盖或不需要，可以暂时忽略 */
+    /* border-radius: 8px 8px 0 0; */
+}
+
+.controls-container {
+    position: absolute; /* 绝对定位到底部 */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明背景 */
+    padding: 10px 15px;
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    gap: 10px; /* 控件之间的间距 */
+    opacity: 0; /* 默认隐藏 */
+    transition: opacity 0.3s ease-in-out; /* 平滑过渡效果 */
+    border-radius: 0 0 8px 8px; /* 底部圆角 */
+}
+
+/* 鼠标悬停在视频容器上时显示控制条 */
+.video-player-container:hover .controls-container,
+.video-player-container:focus-within .controls-container { /* 保证控件获取焦点时也显示 */
+    opacity: 1;
+}
+
+.control-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px; /* 图标大小 */
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1; /* 避免按钮高度不一致 */
+}
+.control-button:hover {
+    color: #ddd;
+}
+.control-button i {
+    display: block; /* 让图标占据整个按钮空间 */
+}
+
+
+/* 进度条样式 */
+.progress-bar {
+    flex-grow: 1; /* 占据剩余空间 */
+    height: 8px;
+    cursor: pointer;
+    appearance: none; /* 移除默认样式 */
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    outline: none;
+}
+/* Chrome/Safari/Edge 进度条轨道 */
+.progress-bar::-webkit-slider-runnable-track {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+/* Chrome/Safari/Edge 进度条滑块 */
+.progress-bar::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -3px; /* 使滑块垂直居中 */
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+/* Firefox 进度条轨道 */
+.progress-bar::-moz-range-track {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    border: none; /* Firefox 可能需要移除边框 */
+}
+/* Firefox 进度条滑块 */
+.progress-bar::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+
+.time-display {
+    color: #fff;
+    font-size: 13px;
+    min-width: 40px; /* 防止时间跳动时布局变化 */
+    text-align: center;
+}
+.time-separator {
+    color: #ccc;
+    font-size: 13px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+}
+
+/* 音量条样式 */
+.volume-slider {
+    width: 70px; /* 音量条宽度 */
+    height: 6px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    outline: none;
+    margin-left: 5px; /* 与音量按钮的间距 */
+}
+.volume-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -3px; /* 垂直居中 */
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.volume-slider::-moz-range-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    border: none;
+}
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Failed</title> <!-- Changed Title -->
+    <!-- Google Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* --- Same CSS Styles as the Login Page --- */
+        :root {
+            --primary-color: #6a5af9; /* A nice purple/blue */
+            --primary-hover: #5444d4;
+            --background-gradient-start: #e0eafc;
+            --background-gradient-end: #f0f4f9;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+            --input-bg: #fdfdfd;
+            --white: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --error-color: #dc3545; /* Added error color */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            width: 380px; /* Slightly wider for message */
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* Style for the error message */
+        .error-message {
+            color: var(--error-color);
+            background-color: #f8d7da; /* Light red background */
+            border: 1px solid #f5c6cb; /* Reddish border */
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            text-align: left; /* Align text left within the box */
+            display: flex; /* Use flex for icon alignment */
+            align-items: center; /* Center icon vertically */
+        }
+
+        .error-message i {
+            margin-right: 10px; /* Space between icon and text */
+            font-size: 1.2em; /* Make icon slightly larger */
+            color: var(--error-color); /* Match icon color */
+        }
+
+        /* --- Reusing button styles --- */
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.05em;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none; /* For anchor styled as button */
+            display: inline-block; /* For anchor styled as button */
+            box-sizing: border-box; /* Ensure padding doesn't break width */
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+         .button:active {
+             transform: translateY(0px);
+        }
+
+        /* --- Reusing options styles --- */
+        .options {
+            margin-top: 25px;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .options a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 5px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .options a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        /* --- End of Shared CSS --- */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Login Failed</h2> <!-- Changed Heading -->
+
+        <!-- Error Message Display -->
+        <div class="error-message">
+             <i class="fas fa-exclamation-circle"></i> <!-- Error Icon -->
+            <span>
+                <!-- Generic Error Message - Replace with specific backend error if possible -->
+                The username or password you entered is incorrect. Please check your credentials and try again.
+                <!-- Example Specific Message (commented out): -->
+                <!-- Invalid username or password. -->
+            </span>
+        </div>
+
+        <!-- Action Button -->
+        <!-- Link back to the login page -->
+        <a href="login.html" class="button">Try Again</a>
+        <!-- Make sure 'login.html' is the correct name of your login file -->
+
+
+        <!-- Options for Forgot Password / Register -->
+        <div class="options">
+             <a href="forgot-password.html">Forgot Password?</a> <!-- Added Forgot Password link -->
+             <span style="margin: 0 5px;">|</span> <!-- Separator -->
+             <span>Don't have an account?</span> <a href="register.html">Register Now</a>
+             <!-- Make sure 'forgot-password.html' and 'register.html' point to the correct files -->
+        </div>
+
+    </div>
+
+</body>
+</html>
