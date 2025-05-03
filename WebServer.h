@@ -27,6 +27,7 @@ public:
     int m_socked;
     int  m_epolled;
     int piped[2];
+    int modfd_piped[2];
     epoll_event events[MAX_FD];
     http_conn * conn;
 
@@ -49,6 +50,8 @@ public:
     void eventLoop();
     void dealRead(int fd);
     void dealWrite(int fd);
+    void dealModfd(modfdInfo * mfi);
+    void dealModPipe();
 
     
     //计时器是否到时间

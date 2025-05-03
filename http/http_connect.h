@@ -15,6 +15,16 @@ using std::cout;
 using std::endl;
 
 #define MAX_BUF 4096
+
+
+class modfdInfo
+{
+public:
+    int fd;
+    int modfd;
+};
+
+
 class http_conn
 {
 public:
@@ -57,7 +67,7 @@ public:
     //写响应报文
     HTTP_CODE doRequst();
     void test();
-    bool write();
+    bool writefile();
     bool process();
     bool sendvideo();
 
@@ -132,4 +142,10 @@ public:
     //状态是否改变
     int improv;
     int interrupt;
+
+    int modfd_pipe;
+    modfdInfo* mfi;
+    void modfd(int op);
 };
+
+

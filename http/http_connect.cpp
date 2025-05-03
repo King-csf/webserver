@@ -1,6 +1,7 @@
 #include "http_connect.h"
 
 locker lock;
+locker lock_pipe;
 
 http_conn::http_conn()
 {
@@ -30,7 +31,7 @@ http_conn::http_conn()
     send_offset = 0;
     send_remaining = 0;
     video_fd = -1;
-    
+    mfi = new modfdInfo();
 }
 
 
@@ -73,6 +74,7 @@ http_conn::~http_conn()
 {
     delete[] rec_buf;
     delete[] snd_buf;
+    delete mfi;
 }
 
 bool http_conn::readOnce()
@@ -97,7 +99,7 @@ bool http_conn::readOnce()
         read_idx += ret;
     }
     buf = string(rec_buf,0,read_idx);
-    std::cout << string(rec_buf) << std::endl;
+    //std::cout << string(rec_buf) << std::endl;
     return true;
 }
 
@@ -134,8 +136,8 @@ http_conn::LINE_STATUS http_conn::readLine()
 //解析请求行
 http_conn::HTTP_CODE http_conn::praseRequstLine(string text)
 {
-   std::cout << " run praseRequstLine" <<std::endl;
-   std::cout << text <<std::endl;
+   //std::cout << " run praseRequstLine" <<std::endl;
+   //std::cout << text <<std::endl;
 
     int method_idx = text.find(' ');
     if(method_idx == string::npos)
@@ -153,8 +155,8 @@ http_conn::HTTP_CODE http_conn::praseRequstLine(string text)
     }
     url = string(text,method_idx+1,url_idx-method_idx-1);
 
-    std::cout << method << std::endl;
-    std::cout << url <<std::endl;
+    //std::cout << method << std::endl;
+    //std::cout << url <<std::endl;
 
     //&& text.find("1.1") == string::npos
     if(text.find("HTTP") == string::npos )
@@ -237,7 +239,7 @@ http_conn::HTTP_CODE http_conn::praseHeader(string text)
 //解析请求内容
 http_conn::HTTP_CODE http_conn::praseContent(int index)
 {
-    cout << "run praseContent" << endl;
+    //cout << "run praseContent" << endl;
     
     if(buf.size()-index < rec_content)
     {
@@ -271,12 +273,12 @@ http_conn::HTTP_CODE http_conn::praseContent(int index)
     {
         int index = content.find('&');
         username = string(content,9,index-9);
-        cout <<"用户名："<< username << endl;
+        //cout <<"用户名："<< username << endl;
 
         content = content.substr(index+1);
         index = content.find('&');
         password = string(content,9,index-9);
-        cout<<"密码：" << password << endl;
+        //cout<<"密码：" << password << endl;
 
     }
 
@@ -349,7 +351,7 @@ http_conn::HTTP_CODE http_conn::doRequst()
 
 
             string query = "select * from user where username = '" + username + "' and passwd = '" + password + "';";
-            cout << query << endl;
+            //cout << query << endl;
             
 
             if(queryMysql(query))
@@ -623,90 +625,95 @@ void http_conn::test()
     HTTP_CODE ret = processRead();
     if(ret == NO_REQUEST)
     {
-        tool.modifyfd(fd,EPOLLIN,true);
+        modfd(1);
+        //tool.modifyfd(fd,EPOLLIN,true);
         return;
     }
 
     else if(ret == BAD_REQUEST)
     {
-        tool.deletefd(tool.m_epolled,fd);
+        modfd(3);
+        //tool.deletefd(tool.m_epolled,fd);
         return;
     }
 
     //cout << ret << endl;
     processWrite(ret);
 
-    tool.modifyfd(fd,EPOLLOUT,true);
+    modfd(2);
+    //tool.modifyfd(fd,EPOLLOUT,true);
 }
 
-bool http_conn::write()
+bool http_conn::writefile()
 {
-    // 示例伪代码
-    cout << "run write" <<endl;
-        // 返回true继续保持连接，返回false断开连接；
-    if (byte_to_send == 0)
-    {
-        munmap(snd_content, snd_len);
-        init();
-        return false;
-    }
 
     while (true)
     {
+
+        size_t header_bytes_to_send_now = ivc[0].iov_len;
+
         int ret = writev(fd, ivc, 2);
-        cout << file_name << ":" << ret  << endl;
+
         if (ret < 0)
         {
             if (errno == EAGAIN)
             {
-                cout << "EAGAIN" << endl;
-                tool.modifyfd(fd, EPOLLOUT, true);
-                return true;
+                modfd(2);    
+                return true; 
             }
-            perror("send fail");
-            munmap(snd_content, snd_len);
-            return false;
+            perror("writev fail");
+            if (snd_content)
+            { 
+                munmap(snd_content, snd_len);
+                snd_content = nullptr; 
+            }
+            
+            return false; 
         }
 
-        byte_have_send += ret;
-        byte_to_send -= ret;
+       
+        byte_to_send -= ret;   
+        byte_have_send += ret; 
 
-        if (byte_have_send > ivc[0].iov_len)
+        if (ret < header_bytes_to_send_now)
         {
-            ivc[0].iov_len = 0;
-            ivc[1].iov_base = (char *)ivc[1].iov_base + (byte_have_send - ivc[0].iov_len);
-            ivc[1].iov_len = byte_to_send;
+            
+            ivc[0].iov_base = (char *)ivc[0].iov_base + ret;
+            ivc[0].iov_len -= ret;
         }
-
         else
         {
-            ivc[0].iov_base = (char *)ivc[0].iov_base + byte_have_send;
-            ivc[0].iov_len = ivc[0].iov_len - byte_have_send;
-        }
+            
+            size_t body_bytes_sent = ret - header_bytes_to_send_now;
+            ivc[0].iov_len = 0; 
 
+            ivc[1].iov_base = (char *)ivc[1].iov_base + body_bytes_sent;
+            ivc[1].iov_len -= body_bytes_sent;
+        }
         if (byte_to_send <= 0)
         {
-            tool.modifyfd(fd, EPOLLIN, true);
-            munmap(snd_content, snd_len);
+            
+            if (snd_content)
+            {
+                munmap(snd_content, snd_len);
+                snd_content = nullptr;
+            }
 
             if (keep_conn == 1)
             {
-                init();
-                return true;
+                modfd(1);    
+                init();      
+                return true; 
             }
-
             else
             {
-                //tool.deletefd(tool.m_epolled,fd);
-                //close(fd);
-                return false;
+            
+                return false; 
             }
         }
-    }
+        
+    } 
 }
-
-
-
 
 bool http_conn::sendvideo() {
     // 1. 发送头部
@@ -729,7 +736,8 @@ bool http_conn::sendvideo() {
     // 2. 头部发送完成后，发送视频文件
     if (!snd_header.empty()) {
         // 头部未发送完成，返回 true 等待下次可写事件
-        tool.modifyfd(fd, EPOLLOUT, true);
+        //tool.modifyfd(fd, EPOLLOUT, true);
+        modfd(2);
         return true;
     }
 
@@ -757,7 +765,8 @@ bool http_conn::sendvideo() {
         if (sent < 0) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) 
             {
-                tool.modifyfd(fd, EPOLLOUT, true);
+                modfd(2);
+                //tool.modifyfd(fd, EPOLLOUT, true);
                 return true;
             }
             perror("sendfile failed");
@@ -780,7 +789,8 @@ bool http_conn::sendvideo() {
     if (send_remaining == 0) {
         close(video_fd);
         video_fd = -1;   // reset!
-        tool.modifyfd(fd, EPOLLIN, true);
+        modfd(1);
+        //tool.modifyfd(fd, EPOLLIN, true);
         init();
         return true;
     }
@@ -796,7 +806,7 @@ bool http_conn::process()
     }
     else
     {
-        return write();
+        return writefile();
     }
 }
 
@@ -804,7 +814,7 @@ bool http_conn::queryMysql(string query)
 {
     if(!mysql)
     {
-        cout << "check : mysql is null" << endl;
+        //cout << "check : mysql is null" << endl;
         return false;
     }
 
@@ -828,7 +838,7 @@ bool http_conn::insertMysql()
 {
     if(!mysql)
     {
-        cout << "insert : mysql is null" << endl;
+        //cout << "insert : mysql is null" << endl;
         return false;
     }
 
@@ -855,7 +865,7 @@ bool http_conn::updatePassword()
 {
     if(!mysql)
     {
-        cout << "update : mysql is null" << endl;
+        //cout << "update : mysql is null" << endl;
         return false;
     }
     string query = "select * from user where email = '" + email + "' and username = '" + username + "';";
@@ -885,10 +895,10 @@ bool http_conn::updatePassword()
 
 bool http_conn::updateTimeIp()
 {
-    cout << "run updateTimeIp" << endl;
+    //cout << "run updateTimeIp" << endl;
     if(!mysql)
     {
-        cout << "update time ip : mysql is null" << endl;
+        //cout << "update time ip : mysql is null" << endl;
         return false;
     }
     char  ip[20];
@@ -915,4 +925,13 @@ bool http_conn::updateTimeIp()
 
     lock.unlock();
     return false;
+}
+
+void http_conn::modfd(int op)
+{
+    mfi->fd = fd;
+    mfi->modfd = op; // 改为读
+    lock_pipe.lock();
+    write(modfd_pipe, mfi, sizeof(modfdInfo));
+    lock_pipe.unlock();
 }

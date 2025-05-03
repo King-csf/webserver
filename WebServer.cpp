@@ -11,6 +11,8 @@ void webserver::mysqlInit()
 void webserver::threadpoolInit()
 {
     pool = new threadpool<http_conn>();
+    pool->tl = tl;
+    pool->users = users;
     //pool->mysql_pool = mysql_con_pool::getIntance();
 }
 
@@ -27,6 +29,7 @@ webserver::webserver()
     users = new client_data[MAX_FD];
     conn = new http_conn[MAX_FD];
     tl = new timer_list();
+    pipe(modfd_piped);
 }
 webserver::~webserver()
 {
@@ -73,6 +76,8 @@ void webserver::eventListen()
 
     tools.setnoblock(piped[1]);
     tools.addfd(m_epolled,piped[0],false);
+    tools.addfd(m_epolled,modfd_piped[0],false);
+    tools.setnoblock(modfd_piped[1]);
     tools.addsig(SIGALRM,tools.handler);
     tools.addsig(SIGTERM,tools.handler);
 
@@ -103,9 +108,13 @@ void webserver::eventLoop()
             }
             else if(events[i].events & EPOLLRDHUP)
             {
-                std::cout << events->data.fd<<" disconnect" << std::endl;
+                //std::cout << events->data.fd<<" disconnect" << std::endl;
                 users[events[i].data.fd].cli_time->cb_func(&users[events[i].data.fd]);
                 tl->deleTimer(users[events[i].data.fd].cli_time);
+            }
+            else if((events[i].data.fd == modfd_piped[0]) && (events[i].events & EPOLLIN))
+            {
+                dealModPipe();
             }
             
             else if((events[i].data.fd == piped[0]) && (events[i].events & EPOLLIN))
@@ -214,7 +223,7 @@ void webserver::dealRead(int fd)
 {
    conn[fd].fd = fd;
    conn[fd].addr = users[fd].client_addr;
-   //conn[fd].readOnce();
+   conn[fd].modfd_pipe = modfd_piped[1];
    
    
    if(users[fd].cli_time)
@@ -224,20 +233,19 @@ void webserver::dealRead(int fd)
    
    pool->addTask(&conn[fd],0);
 
-   while(true)
+   /*while(true)
    {
         if(conn[fd].improv )
         {
             if(conn[fd].interrupt)
             {
-                users[fd].cli_time->cb_func(&users[fd]);
-                tl->deleTimer(users[fd].cli_time);
+                
                 conn[fd].interrupt = 0;
             }
             conn[fd].improv = 0;
             break;
         }
-   }
+   }*/
 
    /*conn[fd].mysql = con_pool->getConnect();
    conn[fd].test();
@@ -254,25 +262,79 @@ void webserver::dealWrite(int fd)
     //conn[fd].process();
 
     if (users[fd].cli_time)
+    {
+        tl->adjustTimer(users[fd].cli_time);
+    }
+
+    pool->addTask(&conn[fd], 1);
+
+     /*while (true)
+     {
+         if (conn[fd].improv)
+         {
+             if (conn[fd].interrupt)
+             {
+                 users[fd].cli_time->cb_func(&users[fd]);
+                 tl->deleTimer(users[fd].cli_time);
+                 conn[fd].interrupt = 0;
+             }
+             conn[fd].improv = 0;
+             break;
+         }
+     }*/
+    
+}
+
+void webserver::dealModfd(modfdInfo * mfi)
+{
+    if(mfi->modfd ==1)
+    {
+        //cout << "dealModfd(1)" << endl;
+        tools.modifyfd(mfi->fd,EPOLLIN,true);
+    }
+    else if(mfi->modfd == 2)
+    {
+        //cout << "dealModfd(2)" << endl;
+        tools.modifyfd(mfi->fd,EPOLLOUT,true);
+    }
+    else
+    {
+        //cout << "dealModfd(3)" << endl;
+        users[mfi->fd].cli_time->cb_func(&users[mfi->fd]);
+        tl->deleTimer(users[mfi->fd].cli_time);
+    }
+}
+
+void webserver::dealModPipe()
+{
+    modfdInfo mfi;
+
+    while(true)
+    {
+        int ret = read(modfd_piped[0],&mfi,sizeof(modfdInfo));
+
+        if(ret == sizeof(modfdInfo))
         {
-            tl->adjustTimer(users[fd].cli_time);
+            dealModfd(&mfi);
         }
-
-        pool->addTask(&conn[fd],1);
-
-        while (true)
+        else if(ret < 0)
         {
-            if (conn[fd].improv)
+            if(errno == EAGAIN || errno == EWOULDBLOCK)
             {
-                if (conn[fd].interrupt)
-                {
-                    users[fd].cli_time->cb_func(&users[fd]);
-                    tl->deleTimer(users[fd].cli_time);
-                    conn[fd].interrupt = 0;
-                }
-                conn[fd].improv = 0;
+                //暂时没有数据
                 break;
             }
+            else
+            {
+                perror("modfd_piped read fail");
+                break;
+
+            }
         }
-    
+
+        else
+        {
+            break;
+        }
+    }
 }

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN"> <!-- 添加语言属性 -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Failed</title> <!-- Changed Title -->
-    <!-- Google Font: Poppins -->
+    <title>登录失败</title> <!-- 已更改标题 -->
+    <!-- Google Font: Poppins (可以保留，或者换成中文字体链接，如果需要) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
+    <!-- Font Awesome for Icons (保持不变) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- Same CSS Styles as the Login Page --- */
+        /* --- CSS 样式与登录页面相同 --- */
         :root {
-            --primary-color: #6a5af9; /* A nice purple/blue */
+            --primary-color: #6a5af9; /* 一个漂亮的紫色/蓝色 */
             --primary-hover: #5444d4;
             --background-gradient-start: #e0eafc;
             --background-gradient-end: #f0f4f9;
@@ -23,11 +23,12 @@
             --input-bg: #fdfdfd;
             --white: #fff;
             --shadow-color: rgba(0, 0, 0, 0.1);
-            --error-color: #dc3545; /* Added error color */
+            --error-color: #dc3545; /* 添加了错误颜色 */
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            /* 优先使用系统默认的中文字体，Poppins 作为后备 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", 'Poppins';
             background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
             display: flex;
             justify-content: center;
@@ -42,7 +43,7 @@
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 5px 20px var(--shadow-color);
-            width: 380px; /* Slightly wider for message */
+            width: 380px; /* 宽度可能需要微调以适应中文 */
             text-align: center;
             transition: transform 0.3s ease;
         }
@@ -53,27 +54,27 @@
             font-weight: 600;
         }
 
-        /* Style for the error message */
+        /* 错误消息样式 */
         .error-message {
             color: var(--error-color);
-            background-color: #f8d7da; /* Light red background */
-            border: 1px solid #f5c6cb; /* Reddish border */
+            background-color: #f8d7da; /* 浅红色背景 */
+            border: 1px solid #f5c6cb; /* 微红边框 */
             border-radius: 6px;
             padding: 15px;
             margin-bottom: 25px;
             font-size: 0.95em;
-            text-align: left; /* Align text left within the box */
-            display: flex; /* Use flex for icon alignment */
-            align-items: center; /* Center icon vertically */
+            text-align: left; /* 文本在框内左对齐 */
+            display: flex; /* 使用 flex 进行图标对齐 */
+            align-items: center; /* 垂直居中图标 */
         }
 
         .error-message i {
-            margin-right: 10px; /* Space between icon and text */
-            font-size: 1.2em; /* Make icon slightly larger */
-            color: var(--error-color); /* Match icon color */
+            margin-right: 10px; /* 图标和文本之间的间距 */
+            font-size: 1.2em; /* 图标稍大 */
+            color: var(--error-color); /* 匹配图标颜色 */
         }
 
-        /* --- Reusing button styles --- */
+        /* --- 复用按钮样式 --- */
         .button {
             background-color: var(--primary-color);
             color: white;
@@ -86,9 +87,9 @@
             font-weight: 500;
             margin-top: 15px;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            text-decoration: none; /* For anchor styled as button */
-            display: inline-block; /* For anchor styled as button */
-            box-sizing: border-box; /* Ensure padding doesn't break width */
+            text-decoration: none; /* 用于样式化为按钮的链接 */
+            display: inline-block; /* 用于样式化为按钮的链接 */
+            box-sizing: border-box; /* 确保内边距不破坏宽度 */
         }
 
         .button:hover {
@@ -100,7 +101,7 @@
              transform: translateY(0px);
         }
 
-        /* --- Reusing options styles --- */
+        /* --- 复用选项样式 --- */
         .options {
             margin-top: 25px;
             font-size: 0.9em;
@@ -119,37 +120,35 @@
             color: var(--primary-hover);
             text-decoration: underline;
         }
-        /* --- End of Shared CSS --- */
+        /* --- CSS 结束 --- */
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Login Failed</h2> <!-- Changed Heading -->
+        <h2>登录失败</h2> <!-- 已更改标题 -->
 
-        <!-- Error Message Display -->
+        <!-- 错误信息显示 -->
         <div class="error-message">
-             <i class="fas fa-exclamation-circle"></i> <!-- Error Icon -->
+             <i class="fas fa-exclamation-circle"></i> <!-- 错误图标 -->
             <span>
-                <!-- Generic Error Message - Replace with specific backend error if possible -->
-                The username or password you entered is incorrect. Please check your credentials and try again.
-                <!-- Example Specific Message (commented out): -->
-                <!-- Invalid username or password. -->
+                <!-- 通用错误消息 - 如果可能，替换为后端返回的具体错误 -->
+                用户名或密码错误，请检查后重试。
             </span>
         </div>
 
-        <!-- Action Button -->
-        <!-- Link back to the login page -->
-        <a href="login.html" class="button">Try Again</a>
-        <!-- Make sure 'login.html' is the correct name of your login file -->
+        <!-- 操作按钮 -->
+        <!-- 链接回登录页面 -->
+        <a href="login.html" class="button">重试</a>
+        <!-- 确保 'login.html' 是您登录文件的正确名称 -->
 
 
-        <!-- Options for Forgot Password / Register -->
+        <!-- 忘记密码/注册选项 -->
         <div class="options">
-             <a href="forgot-password.html">Forgot Password?</a> <!-- Added Forgot Password link -->
-             <span style="margin: 0 5px;">|</span> <!-- Separator -->
-             <span>Don't have an account?</span> <a href="register.html">Register Now</a>
-             <!-- Make sure 'forgot-password.html' and 'register.html' point to the correct files -->
+             <a href="forgot-password.html">忘记密码？</a> <!-- 添加了忘记密码链接 -->
+             <span style="margin: 0 5px;">|</span> <!-- 分隔符 -->
+             <span>还没有账户？</span> <a href="register.html">立即注册</a>
+             <!-- 确保 'forgot-password.html' 和 'register.html' 指向正确的文件 -->
         </div>
 
     </div>

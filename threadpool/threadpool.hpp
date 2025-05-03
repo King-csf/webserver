@@ -20,6 +20,9 @@ public:
     int have_use_thread;
     int free_thread;
 
+    client_data *users;
+    timer_list *tl;
+
     queue<T*> task;
     vector<pthread_t> thread_list;
     mysql_con_pool * mysql_pool;
@@ -131,16 +134,16 @@ void threadpool<T>::run()
                 
                 quest->test();
 
-                
                 mysql_pool->releaseConnect(quest->mysql);
                 quest->mysql = nullptr;
                 
-                quest->improv = 1;
+                //quest->improv = 1;
             }
             else 
             {
-                quest->improv = 1;
-                quest->interrupt = 1;
+                quest->modfd(3);
+                //quest->improv = 1;
+                //quest->interrupt = 1;
             }
         }
         //发送数据
@@ -148,12 +151,17 @@ void threadpool<T>::run()
         {
            if( quest->process())
            {
-                quest->improv = 1;
+                //quest->modfd(1);
            }
            else
            {
-                quest->improv = 1;
-                quest->interrupt = 1;
+                quest->modfd(3);
+                /*lock.lock();
+                users[quest->fd].cli_time->cb_func(&users[quest->fd]);
+                tl->deleTimer(users[quest->fd].cli_time);
+                lock.unlock();*/
+                //quest->improv = 1;
+                //quest->interrupt = 1;
            }
            
            
